@@ -1,8 +1,8 @@
 (ns cc.logic.nova-compra
-  (:require [schema.core :as s]
-            [cc.model :as model]))
+  (:require [cc.model :as m]
+            [schema.core :as s]))
 
-(s/defn adiciona-compra :- model/Compras
-  [compras :- model/Compras, compra :- model/Compra]
+(s/defn adiciona-compra :- m/Compras
+  [compras :- m/Compras, compra :- m/Compra]
   (let [id (:id-compra compra)]
     (assoc compras id compra)))
