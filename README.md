@@ -1,6 +1,6 @@
 # Credit Card (improved version)
 Projeto em Clojure simulando (de forma básica) o cartão de crédito de um cliente Nubank.
-* Java-time, Plumatic Schema
+* Java-time, Prismatic Schema
 * Testes unitários
 
 ## Funcionalidades
