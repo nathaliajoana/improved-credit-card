@@ -1,18 +1,19 @@
 (ns cc.db
-  (:require [java-time :as jt]))
+  (:require [cc.model :as m]
+            [java-time :as jt]
+            [schema.core :as s]))
 
 ; ---------------------------------------------------------------------------
 ; Cliente & Cartão de Crédito
 
-(def cliente1
+(s/def cliente1 :- m/Cliente
   {:id-cliente  1
    :nome        "Fulano B. da Silva"
    :cpf         "111.111.111-11"
    :email       "fulanobdasilva@gmail.com"
-   :cartao      {:numero "0000 0000 0000 0000", :cvv "123", :validade "01/25", :limite 5000.00}})
+   :cartao      {:numero "0000 0000 0000 0000", :cvv "123", :validade (jt/local-date 2025 01), :limite 5000.00}})
 
-
-(defn cliente []
+(s/defn cliente :- m/PVec []
   [cliente1])
 
 ; ---------------------------------------------------------------------------
@@ -60,8 +61,8 @@
               :estabelecimento "Curso F"
               :categoria       "Educação"})
 
-(def id-e-compras
-  {1 compra1, 2 compra2, 3 compra3, 4 compra4, 5 compra5, 6 compra6})     ; schema Compras
+(s/def id-e-compras :- m/Compras
+  {1 compra1, 2 compra2, 3 compra3, 4 compra4, 5 compra5, 6 compra6})
 
-(defn compras []
+(s/defn compras :- m/PVec []
   [compra1, compra2, compra3, compra4, compra5, compra6])

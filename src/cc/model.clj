@@ -1,15 +1,20 @@
 (ns cc.model
   (:use clojure.pprint)
-  (:require [schema.core :as s]))
+  (:require [schema.core :as s])
+  (:import (clojure.lang LazySeq)
+           (java.time LocalDate)
+           (clojure.lang PersistentVector)))
 
 (s/set-fn-validation! true)
 
 (def PosInt (s/pred pos-int?))                              ; número inteiro positivo
 (def PosNum (s/pred pos?))                                  ; número positivo e double
+(def PVec PersistentVector)
+(def LSeq LazySeq)
 
 (def Cartao
   "Schema de um cartão de crédito"
-  {:numero s/Str, :cvv s/Str, :validade s/Str, :limite PosNum})
+  {:numero s/Str, :cvv s/Str, :validade LocalDate, :limite PosNum})
 
 (def Cliente
   "Schema de um cliente com cartão de crédito"
@@ -21,13 +26,23 @@
 
 (def Compra
   "Schema de uma compra"
-  {:id-cliente       PosInt
-   :id-compra        PosInt
-   :data             java.time.LocalDate
-   :valor            PosNum
-   :estabelecimento  s/Str
-   :categoria        s/Str})
+  {:id-cliente      PosInt
+   :id-compra       PosInt
+   :data            LocalDate
+   :valor           PosNum
+   :estabelecimento s/Str
+   :categoria       s/Str})
 
 (def Compras
   "Schema de lista de compras: id-e-compras"
   {PosInt Compra})
+
+(def Resumo
+  "Schema do resumo de compras"
+  {:usuario           PosInt
+   :numero-de-compras PosInt
+   :valor-total       s/Str})
+
+(def Categoria
+  "Schema de gastos por categoria"
+  {s/Str s/Str})

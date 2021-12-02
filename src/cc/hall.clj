@@ -32,7 +32,6 @@
 
 ; ADICIONAR COMPRA NA LISTAGEM DE COMPRAS
 (println "---ADD COMPRA NA LISTAGEM DE COMPRAS---")
-
 (pprint (l.compra/adiciona-compra db/id-e-compras
                            {:id-cliente      1
                             :id-compra       7
@@ -40,11 +39,10 @@
                             :valor           100.00
                             :estabelecimento "Lanchonete G"
                             :categoria       "Alimentação"}))
-
-(pprint (l.compra/adiciona-compra db/id-e-compras
-                           {:id-cliente      1
-                            :id-compra       8
-                            :data            (jt/local-date 2021 11 28)
-                            :valor           20.00
-                            :estabelecimento "Sorveteria H"
-                            :categoria       "Alimentação"}))
+;(pprint (l.compra/adiciona-compra db/id-e-compras
+;                           {:id-cliente      1
+;                            :id-compra       8
+;                            :data            (jt/local-date 2021 11 28)
+;                            :valor           20.00
+;                            :estabelecimento "Sorveteria H"
+;                            :categoria       "Alimentação"}))

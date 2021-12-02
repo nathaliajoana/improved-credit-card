@@ -1,12 +1,14 @@
 (ns cc.logic.gastos-categoria
-  (:require [cc.logic.resumo :as l.resumo]))
+  (:require [cc.model :as m]
+            [schema.core :as s]
+            [cc.logic.resumo :as l.resumo]))
 
-(defn organizacao-categoria
+(s/defn organizacao-categoria :- m/Categoria
   [[categoria detalhes-categoria]]
    {categoria (l.resumo/total-das-compras detalhes-categoria)})
 
-(defn gasto-por-categoria
-  [compras]
+(s/defn gasto-por-categoria :- m/LSeq
+  [compras :- m/PVec]
   (->> compras
        (group-by :categoria)
        (map organizacao-categoria)))

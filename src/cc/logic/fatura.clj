@@ -1,17 +1,15 @@
 (ns cc.logic.fatura
-  (:require [java-time :as jt]
+  (:require [cc.model :as m]
+            [java-time :as jt]
+            [schema.core :as s]
             [cc.logic.resumo :as l.resumo]))
 
-(defn valores
-  [[_ detalhes]]
-  ( detalhes))
-
-(defn mes-atual?
+(s/defn mes-atual? :- s/Bool
   [compras]
   (= (jt/as (:data compras) :year :month-of-year) (jt/as (jt/local-date) :year :month-of-year)))
 
-(defn fatura-do-mes
-  [compras]
+(s/defn fatura-do-mes :- s/Str
+  [compras :- m/PVec]
   (->> compras
        (filter mes-atual?)
        (l.resumo/total-das-compras)))

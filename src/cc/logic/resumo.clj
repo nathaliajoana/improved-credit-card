@@ -1,20 +1,22 @@
-(ns cc.logic.resumo)
+(ns cc.logic.resumo
+  (:require [cc.model :as m]
+            [schema.core :as s]))
 
-(defn total-das-compras
+(s/defn total-das-compras :- s/Str
   [detalhes]
   (->> detalhes
        (map :valor)
        (reduce +)
        (format "R$%.2f")))
 
-(defn resumo-do-cliente
+(s/defn resumo-do-cliente :- m/Resumo
   [[id-cliente detalhes-compras]]
   {:usuario           id-cliente
    :numero-de-compras (count detalhes-compras)
    :valor-total       (total-das-compras detalhes-compras)})
 
-(defn resumo
-  [compras]
+(s/defn resumo :- m/LSeq
+  [compras :- m/PVec]
   (->> compras
        (group-by :id-cliente)
-       (map resumo-do-cliente) ) )
+       (map resumo-do-cliente)))
