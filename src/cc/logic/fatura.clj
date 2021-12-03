@@ -5,11 +5,13 @@
             [cc.logic.resumo :as l.resumo]))
 
 (s/defn mes-atual? :- s/Bool
+  "Verifica se o mês da compra equivale ao mês atual"
   [compras]
   (= (jt/as (:data compras) :year :month-of-year) (jt/as (jt/local-date) :year :month-of-year)))
 
 (s/defn fatura-do-mes :- s/Str
-  [compras :- m/PVec]
+  "Retorna o valor total das compras feitas durante o mês atual"
+  [compras :- [m/Compra]]
   (->> compras
        (filter mes-atual?)
        (l.resumo/total-das-compras)))
