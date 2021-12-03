@@ -1,7 +1,7 @@
 # Credit Card (improved version)
 Projeto em Clojure simulando (de forma básica) o cartão de crédito de um cliente Nubank.
-* Java-time, Prismatic Schema
-* Testes unitários
+* Utiliza Java-time e Plumatic Schema
+* Testes de unidade automatizados
 
 ## Funcionalidades
 * Representação dos dados do cliente (nome, cpf, email)
@@ -11,8 +11,10 @@ Projeto em Clojure simulando (de forma básica) o cartão de crédito de um clie
 * Valor dos gastos agrupados por categoria
 * Cálculo do valor da fatura (ciclo: primeiro ao último dia do mês atual)
 
-## Testes (WIP)
-- TODO
+## Testes automatizados
+* Teste da função que adiciona uma compra na lista de compras realizadas;
+* Teste da função que lista as compras realizadas;
+* Teste da função que realiza o cálculo dos gastos agrupados por categoria
 
 ## Utilização
 * Toda funcionalidade está disponível para visualização no arquivo **hall.clj**
