@@ -17,7 +17,7 @@ Projeto em Clojure simulando (de forma básica) o cartão de crédito de um clie
 * Teste da função que realiza o cálculo dos gastos agrupados por categoria
 
 ## Utilização
-* Toda funcionalidade está disponível para visualização no arquivo **hall.clj**
+* Toda funcionalidade está disponível para visualização no arquivo **dashboard.clj**
 
 ## Autora
 * **Nathália Joana**: @nathaliajoana (https://github.com/nathaliajoana)
