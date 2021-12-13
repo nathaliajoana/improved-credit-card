@@ -6,6 +6,7 @@
             [cc.logic.compras :refer :all]
             [cc.logic.gastos-categoria :refer :all]))
 
+;TODO fix tests to match datomic integration
 (s/set-fn-validation! true)
 
 (deftest adiciona-compra-test
