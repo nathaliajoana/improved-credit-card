@@ -1,74 +1,48 @@
 (ns cc.db
-  (:require [cc.model :as m]
-            [java-time :as jt]
-            [schema.core :as s]))
+  (:use clojure.pprint)
+  (:require [java-time :as jt]
+            [datomic.api :as d]
+            [cc.models.model :as m]
+            [cc.logic.resumo :as r]
+            [cc.logic.fatura :as f]
+            [cc.database.datomic :as dtm]
+            [cc.logic.gastos-categoria :as gc]))
 
-; ---------------------------------------------------------------------------
-; Cliente & Cartão de Crédito
+(println (dtm/apaga-db!))
 
-(s/def cliente1 :- m/Cliente
-  {:id-cliente  1
-   :nome        "Fulano B. da Silva"
-   :cpf         "111.111.111-11"
-   :email       "fulanobdasilva@gmail.com"
-   :cartao      {:numero "0000 0000 0000 0000", :cvv "123", :validade (jt/local-date 2025 01), :limite 5000.00}})
+(def conn (dtm/abre-conexao!))
+(dtm/cria-schema! conn)
 
-(s/defn cliente :- [m/Cliente] []
-  [cliente1])
+(dtm/cria-cliente! conn [(m/cliente 1 "Fulano" "111.111.111-11" "fulano@gmail.com")
+                         (m/cliente 2 "Beltrano" "222.222.222-22" "beltrano@hotmail.com")])
 
-; ---------------------------------------------------------------------------
-; Lista de Compras
+(dtm/cria-cartao! conn [(m/cartao 1 "0000 0000 0000 0000" "123" (jt/sql-timestamp 2025 01 01) 5000.00M)
+                        (m/cartao 2 "0202 0202 0202 0202" "444" (jt/sql-timestamp 2024 01 01) 1000.00M)])
 
-(s/def compra1 :- m/Compra
-  {:id-cliente      1
-   :id-compra       1
-   :data            (jt/local-date 2021 11 29)
-   :valor           54.99
-   :estabelecimento "Hamburgueria A"
-   :categoria       "Alimentação"})
+(dtm/cria-compra! conn [(m/compra 1 (jt/sql-timestamp 2021 11 29) 54.99M "Hamburgueria A" "Alimentação")
+                        (m/compra 1 (jt/sql-timestamp 2021 12 03) 100.20M "Farmacia B" "Saúde")
+                        (m/compra 1 (jt/sql-timestamp 2021 12 05) 599.50M "Faculdade C" "Educação")
+                        (m/compra 1 (jt/sql-timestamp 2021 12 11) 550.99M "Mercado D" "Alimentação")
+                        (m/compra 1 (jt/sql-timestamp 2021 12 20) 400.00M "Consultorio E" "Saúde")
+                        (m/compra 1 (jt/sql-timestamp 2021 12 25) 145.90M "Curso F" "Educação")
+                        (m/compra 2 (jt/sql-timestamp 2021 11 02) 39.99M "Lanchonete G" "Alimentação")])
 
-(s/def compra2 :- m/Compra
-  {:id-cliente      1
-   :id-compra       2
-   :data            (jt/local-date 2021 12 03)
-   :valor           100.20
-   :estabelecimento "Farmacia B"
-   :categoria       "Saúde"})
+; --- TODAS AS COMPRAS ---
+(def compras (flatten [(dtm/todas-as-compras (d/db conn))]))
+(pprint compras)
 
-(s/def compra3 :- m/Compra
-  {:id-cliente      1
-   :id-compra       3
-   :data            (jt/local-date 2021 12 05)
-   :valor           599.50
-   :estabelecimento "Faculdade C"
-   :categoria       "Educação"})
+; --- DADOS DO CLIENTE ---
+(pprint (dtm/dados-cliente (d/db conn) 1))
 
-(s/def compra4 :- m/Compra
-  {:id-cliente      1
-   :id-compra       4
-   :data            (jt/local-date 2021 12 11)
-   :valor           550.99
-   :estabelecimento "Mercado D"
-   :categoria       "Alimentação"})
+; --- DADOS DO CARTAO ---
+(pprint (dtm/dados-cartao (d/db conn) 1))
 
-(s/def compra5 :- m/Compra
-  {:id-cliente      1
-   :id-compra       5
-   :data            (jt/local-date 2021 12 20)
-   :valor           400.00
-   :estabelecimento "Consultorio E"
-   :categoria       "Saúde"})
+; --- RESUMO DOS CLIENTES --
+(pprint (r/resumo compras))
 
-(s/def compra6 :- m/Compra
-  {:id-cliente      1
-   :id-compra       6
-   :data            (jt/local-date 2021 12 25)
-   :valor           145.90
-   :estabelecimento "Curso F"
-   :categoria       "Educação"})
+; --- GASTOS POR CATEGORIA POR CLIENTE ---
+(println (gc/gasto-por-categoria compras))
 
-(s/def id-e-compras :- m/Compras
-  {1 compra1, 2 compra2, 3 compra3, 4 compra4, 5 compra5, 6 compra6})
+; --- FATURA DO MÊS POR CLIENTE --- (not working yet)
+;(println (f/fatura-do-mes compras))
 
-(s/def compras :- [m/Compra]
-  [compra1, compra2, compra3, compra4, compra5, compra6])
